@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Header } from 'semantic-ui-react';
 
-export default function Book({ title, img }) {
+type TBookProps = {
+  title: string,
+  img: any
+}
+
+export default function Book({ title, img }: TBookProps) {
   const [checked, setCheck] = useState(false);
   if (checked) {
     window.alert(`${title} is checked!!!`);
   }
   return (
-    <div className="book-container">
-      <div className="title-container">
-        <h4>{title}</h4>
+    <Container>
+      <Container text>
+        <Header as='h4'>{title}</Header>
         <input 
           type="checkbox" 
           checked={checked}
           onClick={() => setCheck(!checked)}           
         />
-      </div>
+      </Container>
       <img
         className="book-img"
         src={img}
         alt={title}
       />
-    </div>
+    </Container>
   );
 }
