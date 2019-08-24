@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Header } from 'semantic-ui-react';
+import { Card, Image, Header } from 'semantic-ui-react';
 
 type TBookProps = {
   title: string,
@@ -12,20 +12,24 @@ export default function Book({ title, img }: TBookProps) {
     window.alert(`${title} is checked!!!`);
   }
   return (
-    <Container>
-      <Container text>
-        <Header as='h4'>{title}</Header>
-        <input 
-          type="checkbox" 
-          checked={checked}
-          onClick={() => setCheck(!checked)}           
-        />
-      </Container>
-      <img
-        className="book-img"
+    <Card>
+      <Image
         src={img}
         alt={title}
+        wrapped
+        ui={false}
       />
-    </Container>
+      <Card.Content>
+        <Card.Header>{title}</Card.Header>
+        <Card.Description>
+          {`purchased `}
+          <input
+            type="checkbox" 
+            checked={checked}
+            onClick={() => setCheck(!checked)}           
+          />
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 }

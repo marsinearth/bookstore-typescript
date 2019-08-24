@@ -1,10 +1,16 @@
 import React from 'react';
+import { Container, Card, Header } from 'semantic-ui-react';
 import Book from '../components/book';
 import LearningReact from '../assets/images/learningReact.jpg';
 import LearningReactNative from '../assets/images/learningReactNative.jpg';
 import ReactUpAndLearning from '../assets/images/reactUpandLearning.jpg';
 
-const bookList = [
+type TBook = {
+  title: string,
+  img: string
+}
+
+const bookList: TBook[] = [
   {
     title: 'learning React',
     img: LearningReact
@@ -21,20 +27,18 @@ const bookList = [
 
 export default function Home() {
   return (
-    <div className="App">
-      <h1>Book Store</h1>
-      <section style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-        <p>샘플 북스토어</p>
-        <div className="booklist">
-          {bookList.map(({ title, img }) => (
-            <Book
-              key={title}
-              title={title}
-              img={img}
-            />
-          ))}
-        </div>
-      </section>
-    </div>
+    <Container fluid>
+      <Header as='h1'>Book Store</Header>
+      <p>샘플 북스토어</p>
+      <Card.Group stackable>
+        {bookList.map(({ title, img }) => (
+          <Book
+            key={title}
+            title={title}
+            img={img}
+          />
+        ))}
+      </Card.Group>
+    </Container>
   );
 }
