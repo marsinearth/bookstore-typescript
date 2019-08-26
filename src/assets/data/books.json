@@ -1,0 +1,14 @@
+[
+  {
+    "title": "learning React",
+    "price": 10000
+  },
+  {
+    "title": "learning React Native",
+    "price": 20000
+  },
+  {
+    "title": "React up and learning",
+    "price": 25000
+  }
+]
