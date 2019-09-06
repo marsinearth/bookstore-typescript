@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/jest": "24.0.18",
-    "@types/node": "12.7.2",
-    "@types/react": "16.9.2",
-    "@types/react-dom": "16.9.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
@@ -14,7 +10,6 @@
     "semantic-ui-react": "^0.88.0",
     "sweetalert2": "^8.16.3",
     "sweetalert2-react-content": "^1.1.0",
-    "typescript": "3.5.3",
     "uuid": "^3.3.3"
   },
   "scripts": {
@@ -39,6 +34,11 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^3.4.5"
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.4",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "@types/uuid": "^3.4.5",
+    "typescript": "^3.6.2"
   }
 }
