@@ -1,23 +1,21 @@
-import React, { memo, useCallback, Dispatch } from 'react';
-import { Button, Card, Item } from 'semantic-ui-react';
-import RSwal from '../utils/reactSwal';
-import { useStateValue, TCartProduct, TAction } from '../context/bookContext';
-import toWon from '../utils/formatCurrency';
+import React, { memo, useCallback, Dispatch } from 'react'
+import { Button, Card, Item } from 'semantic-ui-react'
+import { useStateValue, TCartProduct, TAction } from '../contexts/bookReducer'
+import toWon from '../utils/formatCurrency'
+import bookList, { TBook } from '../assets/data/books'
 
 type TCartProductProps = TCartProduct & {
   dispatch: Dispatch<TAction>
 }
 
 const CartProduct = memo(({
-  pid,
-  img,
-  title,
+  bookId,
   number,
-  price,
   dispatch
 }: TCartProductProps) => {
+  const { img, title, price } = bookList.find(({ bookId: bid }) => bid === bookId) as TBook || {}
   return (
-    <Item key={pid}>
+    <Item key={bookId}>
       <Item.Image size="tiny" src={img} />
       <Item.Content>
         <Item.Header>{title}</Item.Header>
@@ -30,11 +28,11 @@ const CartProduct = memo(({
           onClick={useCallback(() => {
             dispatch({
               type: 'remove-item',
-              pid,
-              price
-            })
-            RSwal('info', `${title} 1개가 제거되었습니다.`);
-          }, [pid, dispatch])}
+              bookId,
+              price,
+              title
+            })            
+          }, [bookId, dispatch])}
         />
       </Item.Content>
     </Item>
@@ -49,7 +47,7 @@ export default memo(() => {
         <Card.Header>구입 목록</Card.Header>
         <Item.Group divided>
           {cartProducts.map((props: TCartProduct) => (
-            <CartProduct key={props.pid} dispatch={dispatch} {...props} />
+            <CartProduct key={props.bookId} dispatch={dispatch} {...props} />
           ))}
         </Item.Group>
       </Card.Content>

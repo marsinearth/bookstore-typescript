@@ -1,9 +1,9 @@
 import React, { FC, ReactNode, useReducer, createContext, useContext, Dispatch } from 'react';
-import uuidV1 from 'uuid/v1';
 import bookList, { TBook } from '../assets/data/books';
+import RSwal from '../utils/reactSwal';
+import toWon from '../utils/formatCurrency';
 
-export type TCartProduct = TBook & {
-  pid: string,
+export type TCartProduct = Pick<TBook, 'bookId'> & {
   number: number
 }
 
@@ -12,23 +12,18 @@ type TState = {
   cartProducts: TCartProduct[]
 }
 
-type TAddItemAction = {
-  type: 'add-item',
+type TItemAction = {
+  type: 'add-item' | 'remove-item',
   price: number,
-  bid: number
-}
-
-type TRemoveAction = {
-  type: 'remove-item',
-  price: number,
-  pid: string
+  bookId: number,
+  title: string
 }
 
 type TResetAction = {
   type: 'reset-cart'
 }
 
-export type TAction = TAddItemAction | TRemoveAction | TResetAction
+export type TAction = TItemAction | TResetAction
 
 type TContext = [TState, Dispatch<TAction>]
 
@@ -41,41 +36,50 @@ const reducer = (state: TState, action: TAction) => {
   const cartProducts = [...state.cartProducts]
   switch (action.type) {
     case 'add-item': {
-      const { bid, price } = action
-      const productIndex = cartProducts.findIndex(({ bookId }) => bookId === bid)
-      if (productIndex > -1) {
-        cartProducts[productIndex].number += 1
-      } else {
-        const book = bookList.find(({ bookId }) => bookId === bid)
-        if (book) {
-          const newProduct = {
-            ...book,
-            number: 1,
-            pid: uuidV1()
+      const { bookId, price, title } = action
+      const resultAcc = state.account - price
+      if (resultAcc >= 0) {
+        const productIndex = cartProducts.findIndex(({ bookId: bid }) => bid === bookId)
+        if (productIndex > -1) {
+          cartProducts[productIndex].number += 1
+        } else {
+          const book = bookList.find(({ bookId: bid }) => bid === bookId)
+          if (book) {
+            const newProduct = {
+              ...book,
+              number: 1
+            }
+            cartProducts.push(newProduct)
           }
-          cartProducts.push(newProduct)
         }
+        RSwal('success', `${title} is purchased!`)
+      } else {
+        RSwal('error', '잔액이 부족합니다!', `잔액: ${toWon(state.account)}이<br />책 가격: ${toWon(price)}보다 적습니다.`)
       }
+      
       return {
-        account: state.account - price,
+        account: resultAcc >= 0 ? resultAcc : state.account,
         cartProducts
       }
     }
     case 'remove-item': {
-      const { pid, price } = action
-      const productIndex = cartProducts.findIndex(({ pid: productId }) => productId === pid) // 무조건 존재함
+      const { bookId, price, title } = action
+      const productIndex = cartProducts.findIndex(({ bookId: bid }) => bookId === bid) // 무조건 존재
       const productNumInCart = cartProducts[productIndex].number
       if (productNumInCart > 1) {
         cartProducts[productIndex].number -= 1
       } else {
         cartProducts.splice(productIndex, 1)
       }
+      RSwal('info', `${title} 1개가 제거되었습니다.`);
+
       return {
         account: state.account + price,
         cartProducts
       }
     }
     case 'reset-cart':
+      RSwal('success', '카트가 초기화 되었습니다!')
       return initialState
     default:
       return state
