@@ -1,42 +1,56 @@
-import { Button, Grid, Header, Item, Rail, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Grid,
+  Header,
+  Item,
+  Label,
+  Rail,
+  Segment,
+} from 'semantic-ui-react'
 import React, { Dispatch, memo, useCallback } from 'react'
 import { TAction, TCartProduct, useStateValue } from '../contexts/bookReducer'
 import bookList, { TBook } from '../assets/data/books'
 
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
+import { formatDistance } from 'date-fns'
 import toWon from '../utils/formatCurrency'
 
 type TCartProductProps = TCartProduct & {
   dispatch: Dispatch<TAction>
 }
 
-const CartProduct = memo<TCartProductProps>(({ bookId, number, dispatch }) => {
-  const { img, title, price } =
-    (bookList.find(({ bookId: bid }) => bid === bookId) as TBook) || {}
-  return (
-    <Item key={bookId}>
-      <Item.Image size='tiny' src={img} />
-      <Item.Content>
-        <Item.Header>{title}</Item.Header>
-        <Item.Meta>{toWon(price)}</Item.Meta>
-        <Item.Description>{`${number}개`}</Item.Description>
-        <Button
-          content='remove'
-          icon='trash'
-          labelPosition='left'
-          onClick={useCallback(() => {
-            dispatch({
-              type: 'remove-item',
-              bookId,
-              price,
-              title,
-            })
-          }, [dispatch, bookId, price, title])}
-        />
-      </Item.Content>
-    </Item>
-  )
-})
+const CartProduct = memo<TCartProductProps>(
+  ({ isbn, createdAt, number, dispatch }) => {
+    const { img, title, price } =
+      (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {}
+    return (
+      <Item key={isbn}>
+        <Item.Image size='tiny' src={img} />
+        <Item.Content>
+          <Item.Header>{title}</Item.Header>
+          <Item.Meta>{toWon(price)}</Item.Meta>
+          <Item.Description>{`${number}개`}</Item.Description>
+          <Button
+            content='remove'
+            icon='trash'
+            labelPosition='left'
+            onClick={useCallback(() => {
+              dispatch({
+                type: 'remove-item',
+                isbn,
+                price,
+                title,
+              })
+            }, [dispatch, isbn, price, title])}
+          />
+        </Item.Content>
+        <Item.Extra>
+          <Label floated='right'>{formatDistance(createdAt, new Date())}</Label>
+        </Item.Extra>
+      </Item>
+    )
+  },
+)
 
 export default memo<RouteComponentProps>(({ history: { goBack } }) => {
   const [{ cartProducts }, dispatch] = useStateValue()
@@ -67,10 +81,9 @@ export default memo<RouteComponentProps>(({ history: { goBack } }) => {
               />
             </Button.Group>
           </Rail>
-
           <Item.Group divided>
             {cartProducts.map((props: TCartProduct) => (
-              <CartProduct {...props} key={props.bookId} dispatch={dispatch} />
+              <CartProduct {...props} key={props.isbn} dispatch={dispatch} />
             ))}
           </Item.Group>
         </Grid.Column>
