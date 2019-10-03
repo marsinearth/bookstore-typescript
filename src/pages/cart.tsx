@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   Grid,
   Header,
   Item,
@@ -11,9 +12,9 @@ import React, { Dispatch, memo, useCallback } from 'react'
 import { TAction, TCartProduct, useStateValue } from '../contexts/bookReducer'
 import bookList, { TBook } from '../assets/data/books'
 
-import { RouteComponentProps } from 'react-router-dom'
 import { formatDistance } from 'date-fns'
 import toWon from '../utils/formatCurrency'
+import { useHistory } from 'react-router-dom'
 
 type TCartProductProps = TCartProduct & {
   dispatch: Dispatch<TAction>
@@ -25,7 +26,7 @@ const CartProduct = memo<TCartProductProps>(
       (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {}
     return (
       <Item key={isbn}>
-        <Item.Image size='tiny' src={img} />
+        <Item.Image size='small' src={img} />
         <Item.Content>
           <Item.Header>{title}</Item.Header>
           <Item.Meta>{toWon(price)}</Item.Meta>
@@ -45,14 +46,15 @@ const CartProduct = memo<TCartProductProps>(
           />
         </Item.Content>
         <Item.Extra>
-          <Label floated='right'>{formatDistance(createdAt, new Date())}</Label>
+          {formatDistance(createdAt, new Date())}
         </Item.Extra>
       </Item>
     )
   },
 )
 
-export default memo<RouteComponentProps>(({ history: { goBack } }) => {
+export default memo(() => {
+  const { goBack } = useHistory()
   const [{ cartProducts }, dispatch] = useStateValue()
   return (
     <Segment raised>
@@ -82,9 +84,18 @@ export default memo<RouteComponentProps>(({ history: { goBack } }) => {
             </Button.Group>
           </Rail>
           <Item.Group divided>
-            {cartProducts.map((props: TCartProduct) => (
-              <CartProduct {...props} key={props.isbn} dispatch={dispatch} />
-            ))}
+            {cartProducts.length 
+              ? cartProducts.map((props: TCartProduct) => (
+                <CartProduct {...props} key={props.isbn} dispatch={dispatch} />
+                )) 
+              : (
+                <Container textAlign='center'>
+                  <Label
+                    size='large'
+                    content='No Item'
+                  />
+                </Container>              
+            )}
           </Item.Group>
         </Grid.Column>
       </Grid>

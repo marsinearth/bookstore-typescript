@@ -10,14 +10,12 @@ import {
 } from 'semantic-ui-react'
 import React, { memo, useCallback, useMemo } from 'react'
 import bookList, { TBook } from '../assets/data/books'
+import { useHistory, useParams } from 'react-router-dom'
 
-import { RouteComponentProps } from 'react-router-dom'
 import toWon from '../utils/formatCurrency'
 import { useStateValue } from '../contexts/bookReducer'
 
 type TISBN = Pick<TBook, 'isbn'>
-
-type TBookDetailProps = RouteComponentProps<TISBN>
 
 const BookDetail = memo<TISBN>(({ isbn }) => {
   const [, dispatch] = useStateValue()
@@ -82,13 +80,9 @@ const BookDetail = memo<TISBN>(({ isbn }) => {
   )
 })
 
-export default memo<TBookDetailProps>(
-  ({
-    history: { goBack },
-    match: {
-      params: { isbn },
-    },
-  }) => {
+export default memo(() => {
+    const { goBack } = useHistory()
+    const { isbn } = useParams()
     return (
       <Segment raised>
         <Grid centered padded>
