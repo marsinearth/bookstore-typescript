@@ -25,7 +25,7 @@ const CartProduct = memo<TCartProductProps>(
     const { img, title, price } =
       (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {}
     return (
-      <Item key={isbn}>
+      <Item>
         <Item.Image size='small' src={img} />
         <Item.Content>
           <Item.Header>{title}</Item.Header>

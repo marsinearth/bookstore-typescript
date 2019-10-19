@@ -9,7 +9,7 @@ export default memo(() => {
   const { push } = useHistory()
   const { pathname } = useLocation()
   const [isPathCart, setPath] = useState(false)
-  const [{ account }] = useStateValue()
+  const [{ account, cartProducts: { length: cartLength } }] = useStateValue()
   useEffect(() => {
     if (pathname === '/cart') {
       setPath(true)
@@ -24,24 +24,33 @@ export default memo(() => {
   }, [push, isPathCart])
   return (
     <Segment textAlign='center' raised>
-      <Header as='h1'>React Book Store</Header>
+      <Header as='h1'>React Book Store</Header>      
+      <Label size='large' image attached='top right'>
+        <Icon name='money' />
+        <Label.Detail>{toWon(account)}</Label.Detail>
+      </Label>
       <Label
         as={isPathCart ? 'span' : 'a'}
         color={isPathCart ? undefined : 'teal'}
         size='large'
         image
-        attached='top right'
+        attached='bottom right'
         onClick={navigateToCart}
       >
         <Icon name='user circle' />
         송조현
         <Label.Detail>
           <Icon name='cart' />
+          {!!cartLength && (
+            <Label
+              size="mini"
+              circular
+              color="red"
+              floating
+              content={cartLength}
+            />
+          )}          
         </Label.Detail>
-      </Label>
-      <Label size='large' image attached='bottom right'>
-        <Icon name='money' />
-        <Label.Detail>{toWon(account)}</Label.Detail>
       </Label>
     </Segment>
   )

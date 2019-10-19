@@ -89,23 +89,14 @@ export default memo(() => {
           <Grid.Column>
             <Header as='h1' content='Purchased Items' textAlign='center' />
             <Rail attached internal position='right'>
-              <Button.Group>
-                <Button
-                  content='Go back'
-                  icon='step backward'
-                  labelPosition='left'
-                  onClick={useCallback(() => {
-                    goBack()
-                  }, [goBack])}
-                />
-                <Button.Or />
-                <Button
-                  content='Reset'
-                  icon='undo'
-                  negative
-                  labelPosition='right'
-                />
-              </Button.Group>
+              <Button
+                content='Go back'
+                icon='step backward'
+                labelPosition='left'
+                onClick={useCallback(() => {
+                  goBack()
+                }, [goBack])}
+              />
             </Rail>
             <BookDetail isbn={isbn} />
           </Grid.Column>
