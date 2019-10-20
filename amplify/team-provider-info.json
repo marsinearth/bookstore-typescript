@@ -1,0 +1,21 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "bookstore-typescript-dev-20191020004630-authRole",
+            "UnauthRoleArn": "arn:aws:iam::210272005686:role/bookstore-typescript-dev-20191020004630-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::210272005686:role/bookstore-typescript-dev-20191020004630-authRole",
+            "Region": "ap-northeast-2",
+            "DeploymentBucketName": "bookstore-typescript-dev-20191020004630-deployment",
+            "UnauthRoleName": "bookstore-typescript-dev-20191020004630-unauthRole",
+            "StackName": "bookstore-typescript-dev-20191020004630",
+            "StackId": "arn:aws:cloudformation:ap-northeast-2:210272005686:stack/bookstore-typescript-dev-20191020004630/9e845450-f287-11e9-b879-02df20fb76d4"
+        },
+        "categories": {
+            "auth": {
+                "bookstoretypescriptead48e39": {
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"1092431043457-u8d10fudqb5r79a9jh8jvri0ji9u7nta.apps.googleusercontent.com\",\"client_secret\":\"8eO8tQV2WSMYutI_wtsTWNMj\"}]"
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,14 @@
+import 'semantic-ui-css/semantic.min.css';
+
+import * as serviceWorker from './serviceWorker';
+
+import Amplify from 'aws-amplify';
+import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'semantic-ui-css/semantic.min.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import config from './aws-exports';
+
+Amplify.configure(config);
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
