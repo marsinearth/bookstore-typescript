@@ -1,10 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# BookStore
 
-## Available Scripts
+> written with React(hooks and context), React Router, TypeScript and AWS-Amplify
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -12,33 +12,22 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
+### [Hosted Demo Website](http://bookstore-typescript-20191020004739-hostingbucket-dev.s3-website.ap-northeast-2.amazonaws.com/)
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+applied with AWS-Amplify, there is demo site.
 
-### `npm run build`
+## Plans forward
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+&#9745; Simple BookStore with React Functional Components with hooks
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+&#9745; using [react context](https://ko.reactjs.org/docs/context.html) to manage states rather than using [useState](https://ko.reactjs.org/docs/hooks-reference.html#usestate) in the most top hierarchical functional component and descend state props to the bottom.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+&#9745; use react-router-dom to separate pages, especially [cart](https://github.com/marsinearth/bookstore-typescript/blob/master/src/pages/cart.tsx) and [bookDetail](https://github.com/marsinearth/bookstore-typescript/blob/master/src/pages/bookDetail.tsx), and use [react-router hooks](https://reacttraining.com/react-router/web/api/Hooks) to interact among routes.
 
-### `npm run eject`
+&#9745; Attach [AWS-Amplify](https://aws-amplify.github.io/docs/js/react) to easily back up the functionalities of backend; do the Sign-in functionality with [Google with the Amplify auth class](https://aws-amplify.github.io/docs/js/authentication#oauth-and-federation-overview).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+&#9744; Attach [Amplify API for backend using GraphQL](https://aws-amplify.github.io/docs/js/react#add-graphql-backend) to alter [the hard-coded book data](https://github.com/marsinearth/bookstore-typescript/tree/master/src/assets/data)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+&#9744; try to manage GraphQL subscription for possible chatting system and product number change in the cart
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+...to be continued
