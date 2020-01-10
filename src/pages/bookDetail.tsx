@@ -1,3 +1,4 @@
+import { ActionTypes, useStateValue } from '../contexts/bookReducer';
 import {
   Button,
   Container,
@@ -13,7 +14,6 @@ import bookList, { TBook } from '../assets/data/books';
 import { useHistory, useParams } from 'react-router-dom';
 
 import toWon from '../utils/formatCurrency';
-import { useStateValue } from '../contexts/bookReducer';
 
 type TISBN = Pick<TBook, 'isbn'>;
 
@@ -66,7 +66,7 @@ const BookDetail = memo<TISBN>(({ isbn }) => {
               labelPosition="left"
               onClick={useCallback(() => {
                 dispatch({
-                  type: 'add-item',
+                  type: ActionTypes.ADD,
                   isbn,
                   price,
                   title,
