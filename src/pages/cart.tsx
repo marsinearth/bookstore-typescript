@@ -1,4 +1,10 @@
 import {
+  ActionTypes,
+  TAction,
+  TCartProduct,
+  useStateValue,
+} from '../contexts/bookReducer';
+import {
   Button,
   Container,
   Grid,
@@ -7,98 +13,116 @@ import {
   Label,
   Rail,
   Segment,
-} from 'semantic-ui-react'
-import React, { Dispatch, memo, useCallback } from 'react'
-import { TAction, TCartProduct, useStateValue } from '../contexts/bookReducer'
-import bookList, { TBook } from '../assets/data/books'
+} from 'semantic-ui-react';
+import React, { Dispatch, memo, useCallback } from 'react';
+import bookList, { TBook } from '../assets/data/books';
 
-import { formatDistance } from 'date-fns'
-import toWon from '../utils/formatCurrency'
-import { useHistory } from 'react-router-dom'
+import { formatDistance } from 'date-fns';
+import toWon from '../utils/formatCurrency';
+import { useHistory } from 'react-router-dom';
 
 type TCartProductProps = TCartProduct & {
-  dispatch: Dispatch<TAction>
-}
+  dispatch: Dispatch<TAction>;
+};
 
 const CartProduct = memo<TCartProductProps>(
   ({ isbn, createdAt, number, dispatch }) => {
     const { img, title, price } =
-      (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {}
+      (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {};
+    const onClick = useCallback(
+      ({ removeAll }) => {
+        dispatch({
+          type: ActionTypes.REMOVE,
+          isbn,
+          price,
+          title,
+          removeAll,
+        });
+      },
+      [dispatch, isbn, price, title],
+    );
     return (
       <Item>
-        <Item.Image size='small' src={img} />
+        <Item.Image size="small" src={img} />
         <Item.Content>
+          <Item.Extra>{formatDistance(createdAt, new Date())}</Item.Extra>
           <Item.Header>{title}</Item.Header>
           <Item.Meta>{toWon(price)}</Item.Meta>
           <Item.Description>{`${number}개`}</Item.Description>
-          <Button
-            content='remove'
-            icon='trash'
-            labelPosition='left'
-            onClick={useCallback(() => {
-              dispatch({
-                type: 'remove-item',
-                isbn,
-                price,
-                title,
-              })
-            }, [dispatch, isbn, price, title])}
-          />
+          {number > 1 ? (
+            <Button.Group size="mini">
+              <Button
+                content="remove"
+                icon="trash"
+                labelPosition="left"
+                onClick={onClick}
+              />
+              <Button.Or />
+              <Button
+                content="all"
+                icon="trash alternate"
+                negative
+                labelPosition="right"
+                onClick={() => onClick({ removeAll: true })}
+              />
+            </Button.Group>
+          ) : (
+            <Button
+              content="remove"
+              icon="trash"
+              labelPosition="left"
+              onClick={onClick}
+            />
+          )}
         </Item.Content>
-        <Item.Extra>
-          {formatDistance(createdAt, new Date())}
-        </Item.Extra>
       </Item>
-    )
+    );
   },
-)
+);
 
 export default memo(() => {
-  const { goBack } = useHistory()
-  const [{ cartProducts }, dispatch] = useStateValue()
+  const { goBack } = useHistory();
+  const [{ cartProducts }, dispatch] = useStateValue();
   return (
     <Segment raised>
       <Grid centered padded>
         <Grid.Column>
-          <Header as='h1' content='Purchased Items' textAlign='center' />
-          <Rail attached internal position='right'>
+          <Header as="h1" content="Purchased Items" textAlign="center" />
+          <Rail attached internal position="right">
             <Button.Group>
               <Button
-                content='Go back'
-                icon='step backward'
-                labelPosition='left'
+                content="Go back"
+                icon="step backward"
+                labelPosition="left"
                 onClick={useCallback(() => {
-                  goBack()
+                  goBack();
                 }, [goBack])}
               />
               <Button.Or />
               <Button
-                content='Reset'
-                icon='undo'
+                content="Reset"
+                icon="undo"
                 negative
-                labelPosition='right'
+                labelPosition="right"
                 onClick={useCallback(() => {
-                  dispatch({ type: 'reset-cart' })
+                  dispatch({ type: ActionTypes.RESET });
                 }, [dispatch])}
               />
             </Button.Group>
           </Rail>
           <Item.Group divided>
-            {cartProducts.length 
-              ? cartProducts.map((props: TCartProduct) => (
+            {cartProducts.length ? (
+              cartProducts.map((props: TCartProduct) => (
                 <CartProduct {...props} key={props.isbn} dispatch={dispatch} />
-                )) 
-              : (
-                <Container textAlign='center'>
-                  <Label
-                    size='large'
-                    content='No Item'
-                  />
-                </Container>              
+              ))
+            ) : (
+              <Container textAlign="center">
+                <Label size="large" content="No Item" />
+              </Container>
             )}
           </Item.Group>
         </Grid.Column>
       </Grid>
     </Segment>
-  )
-})
+  );
+});
