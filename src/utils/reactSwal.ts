@@ -1,16 +1,16 @@
-import Swal, { SweetAlertOptions, SweetAlertType } from 'sweetalert2';
+import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
 import withReactContent from 'sweetalert2-react-content';
 
 const ReactSwal = withReactContent(Swal);
 
 const customRSwalFire = (
-  type: SweetAlertType,
+  icon: SweetAlertIcon,
   title: string,
   html?: string,
 ) => {
   const swalOptions: SweetAlertOptions = {
-    type,
+    icon,
     title,
   };
   if (html) {
