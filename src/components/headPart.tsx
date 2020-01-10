@@ -1,46 +1,56 @@
-import { Header, Icon, Label, Segment } from 'semantic-ui-react'
-import React, { memo, useCallback, useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { Header, Icon, Label, Segment } from 'semantic-ui-react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import toWon from '../utils/formatCurrency'
-import { useStateValue } from '../contexts/bookReducer'
+import toWon from '../utils/formatCurrency';
+import { useStateValue } from '../contexts/bookReducer';
 
 export default memo(() => {
-  const { push } = useHistory()
-  const { pathname } = useLocation()
-  const [isPathCart, setPath] = useState(false)
-  const [{ account, cartProducts: { length: cartLength } }] = useStateValue()
+  const { push } = useHistory();
+  const { pathname } = useLocation();
+  const [isPathCart, setPath] = useState(false);
+  const [{ account, cartProducts }] = useStateValue();
+
+  const cartLength = useMemo(() => {
+    return cartProducts.reduce((total, { number }) => {
+      total += number;
+      return total;
+    }, 0);
+  }, [cartProducts]);
+
   useEffect(() => {
     if (pathname === '/cart') {
-      setPath(true)
+      setPath(true);
     } else {
-      setPath(false)
+      setPath(false);
     }
-  }, [pathname])
+  }, [pathname]);
+
   const navigateToCart = useCallback(() => {
     if (!isPathCart) {
-      push('/cart')
+      push('/cart');
     }
-  }, [push, isPathCart])
+  }, [push, isPathCart]);
+
   return (
-    <Segment textAlign='center' raised>
-      <Header as='h1'>React Book Store</Header>      
-      <Label size='large' image attached='top right'>
-        <Icon name='money' />
+    <Segment textAlign="center" raised>
+      <Header as="h1">React Book Store</Header>
+      <Label size="large" image attached="top right">
+        <Icon name="money" />
         <Label.Detail>{toWon(account)}</Label.Detail>
       </Label>
       <Label
         as={isPathCart ? 'span' : 'a'}
         color={isPathCart ? undefined : 'teal'}
-        size='large'
+        size="large"
         image
-        attached='bottom right'
+        attached="bottom right"
         onClick={navigateToCart}
       >
-        <Icon name='user circle' />
+        <Icon name="user circle" />
         송조현
         <Label.Detail>
-          <Icon name='cart' />
+          <Icon name="cart" />
           {!!cartLength && (
             <Label
               size="mini"
@@ -49,9 +59,9 @@ export default memo(() => {
               floating
               content={cartLength}
             />
-          )}          
+          )}
         </Label.Detail>
       </Label>
     </Segment>
-  )
-})
+  );
+});
