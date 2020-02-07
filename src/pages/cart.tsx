@@ -14,12 +14,12 @@ import {
   Rail,
   Segment,
 } from 'semantic-ui-react';
+import { Link, useHistory } from 'react-router-dom';
 import React, { Dispatch, memo, useCallback } from 'react';
 import bookList, { TBook } from '../assets/data/books';
 
 import { formatDistance } from 'date-fns';
 import toWon from '../utils/formatCurrency';
-import { useHistory } from 'react-router-dom';
 
 type TCartProductProps = TCartProduct & {
   dispatch: Dispatch<TAction>;
@@ -43,8 +43,10 @@ const CartProduct = memo<TCartProductProps>(
     );
     return (
       <Item>
-        <Item.Image size="small" src={img} />
-        <Item.Content>
+        <Link to={`/detail/${isbn}`}>
+          <Item.Image size="small" src={img} />
+        </Link>
+        <Item.Content style={{ paddingLeft: 20 }}>
           <Item.Extra>{formatDistance(createdAt, new Date())}</Item.Extra>
           <Item.Header>{title}</Item.Header>
           <Item.Meta>{toWon(price)}</Item.Meta>

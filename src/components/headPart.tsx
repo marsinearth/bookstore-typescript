@@ -1,6 +1,6 @@
 import { Header, Icon, Label, Segment } from 'semantic-ui-react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import toWon from '../utils/formatCurrency';
 import { useStateValue } from '../contexts/bookReducer';
@@ -34,34 +34,42 @@ export default memo(() => {
 
   return (
     <Segment textAlign="center" raised>
-      <Header as="h1">React Book Store</Header>
-      <Label size="large" image attached="top right">
-        <Icon name="money" />
-        <Label.Detail>{toWon(account)}</Label.Detail>
-      </Label>
-      <Label
-        as={isPathCart ? 'span' : 'a'}
-        color={isPathCart ? undefined : 'teal'}
-        size="large"
-        image
-        attached="bottom right"
-        onClick={navigateToCart}
-      >
-        <Icon name="user circle" />
-        송조현
-        <Label.Detail>
-          <Icon name="cart" />
-          {!!cartLength && (
-            <Label
-              size="mini"
-              circular
-              color="red"
-              floating
-              content={cartLength}
-            />
-          )}
-        </Label.Detail>
-      </Label>
+      <Link to="/">
+        <Header as="h1" icon>
+          <Icon name="book" circular />
+          <Header.Content>React Book Store</Header.Content>
+        </Header>
+      </Link>
+      <Segment attached="bottom" compact style={{ border: 'none' }}>
+        <Label
+          as={isPathCart ? 'span' : 'a'}
+          color={isPathCart ? undefined : 'teal'}
+          size="large"
+          image
+          onClick={navigateToCart}
+        >
+          <Icon name="user circle" />
+          송조현
+          <Label.Detail>
+            <Icon name="cart" />
+            {!!cartLength && (
+              <Label
+                size="mini"
+                circular
+                color="red"
+                floating
+                content={cartLength}
+              />
+            )}
+          </Label.Detail>
+        </Label>
+        <Label size="large" image>
+          {toWon(account)}
+          <Label.Detail>
+            <Icon name="money" />
+          </Label.Detail>
+        </Label>
+      </Segment>
     </Segment>
   );
 });
