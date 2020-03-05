@@ -1,0 +1,6 @@
+type User @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  sub: ID!
+  name: String!
+  account: Int
+}

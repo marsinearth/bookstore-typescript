@@ -1,9 +1,12 @@
 {
     "editor.formatOnSave": true,
     "cSpell.words": [
-        "stackable",
-        "swal",
-        "sweetalert",
-        "북스토어"
+      "persistor",
+      "reduxjs",
+      "serializable",
+      "stackable",
+      "swal",
+      "sweetalert",
+      "북스토어"
     ]
 }
