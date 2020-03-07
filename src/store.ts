@@ -3,6 +3,7 @@ import {
   PAUSE,
   PERSIST,
   PURGE,
+  PersistConfig,
   REGISTER,
   REHYDRATE,
   persistReducer,
@@ -13,15 +14,20 @@ import {
   configureStore,
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
+import user, { UserState } from './reduxSlices/userSlice';
 
 import storage from 'redux-persist/lib/storage';
-import user from './reduxSlices/userSlice';
+
+export interface RootState {
+  user: UserState;
+}
 
 const { NODE_ENV } = process.env;
 
-const persistConfig = {
+const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   storage,
+  whitelist: ['user'],
 };
 
 const rootReducer = combineReducers({ user });

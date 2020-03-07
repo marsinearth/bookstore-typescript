@@ -1,6 +1,9 @@
-import { DataStore } from '@aws-amplify/datastore';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { CreateUserMutationVariables, ListUsersQueryVariables } from '../API';
+
 import { Dispatch } from 'redux';
-import { User } from '../models';
+import { createUser } from '../graphql/mutations';
+import { listUsers } from '../graphql/queries';
 import { logIn } from '../reduxSlices/userSlice';
 
 interface AuthParams {
@@ -10,13 +13,8 @@ interface AuthParams {
 
 const saveUser = async ({ sub, name }: AuthParams) => {
   try {
-    const user = await DataStore.save(
-      new User({
-        name,
-        sub,
-      }),
-    );
-    console.log(`${name} signed up! `, { user });
+    console.log(`${name} signed up! `, { sub });
+    localStorage.setItem('signedUpUserSub', sub);
   } catch (err) {
     console.error('error on saveUser: ', err);
   }
@@ -24,8 +22,25 @@ const saveUser = async ({ sub, name }: AuthParams) => {
 
 const findUser = async (dispatch: Dispatch, { sub, name }: AuthParams) => {
   try {
-    const user = await DataStore.query(User, u => u.sub('eq', sub));
-    console.log(`${name} signed in: `, { user });
+    const userSub = localStorage.getItem('signedUpUserSub');
+    if (userSub === sub) {
+      const createUserVariables: CreateUserMutationVariables = {
+        input: { name, sub, account: 40000 },
+      };
+      const { data } = await API.graphql(
+        graphqlOperation(createUser, createUserVariables),
+      );
+      console.log(`${name} created user: `, { data });
+      localStorage.removeItem('signedUpUserSub');
+    } else {
+      const listUsersVariables: ListUsersQueryVariables = {
+        filter: { sub: { eq: sub } },
+      };
+      const { data } = await await API.graphql(
+        graphqlOperation(listUsers, listUsersVariables),
+      );
+      console.log(`${name} found user: `, { data });
+    }
     dispatch(logIn({ name, sub }));
   } catch (err) {
     console.error('error on findUser: ', err);

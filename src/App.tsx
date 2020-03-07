@@ -11,7 +11,9 @@ import { withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure(awsConfig);
 
-const App = () => {
+const AuthenticatedRouter = withAuthenticator(Router, true);
+
+export default () => {
   const dispatch = useDispatch();
   useEffect(() => {
     Hub.listen('auth', evt => authHandler(evt, dispatch));
@@ -19,9 +21,7 @@ const App = () => {
 
   return (
     <StateProvider>
-      <Router />
+      <AuthenticatedRouter />
     </StateProvider>
   );
 };
-
-export default withAuthenticator(App, true);
