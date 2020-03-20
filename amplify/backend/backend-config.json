@@ -28,5 +28,11 @@
 				}
 			}
 		}
+	},
+	"storage": {
+		"bookStoreImage": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

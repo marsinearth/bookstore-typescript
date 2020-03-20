@@ -49,3 +49,75 @@ export const deleteUser = `mutation DeleteUser(
   }
 }
 `;
+export const createBook = `mutation CreateBook(
+  $input: CreateBookInput!
+  $condition: ModelBookConditionInput
+) {
+  createBook(input: $input, condition: $condition) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;
+export const updateBook = `mutation UpdateBook(
+  $input: UpdateBookInput!
+  $condition: ModelBookConditionInput
+) {
+  updateBook(input: $input, condition: $condition) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;
+export const deleteBook = `mutation DeleteBook(
+  $input: DeleteBookInput!
+  $condition: ModelBookConditionInput
+) {
+  deleteBook(input: $input, condition: $condition) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;

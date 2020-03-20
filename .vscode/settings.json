@@ -4,9 +4,12 @@
       "persistor",
       "reduxjs",
       "serializable",
+      "spinkit",
       "stackable",
       "swal",
       "sweetalert",
+      "tisbn",
+      "uuidv",
       "북스토어"
     ]
 }

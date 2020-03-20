@@ -40,3 +40,66 @@ export const onDeleteUser = `subscription OnDeleteUser($owner: String!) {
   }
 }
 `;
+export const onCreateBook = `subscription OnCreateBook($owner: String!) {
+  onCreateBook(owner: $owner) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;
+export const onUpdateBook = `subscription OnUpdateBook($owner: String!) {
+  onUpdateBook(owner: $owner) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;
+export const onDeleteBook = `subscription OnDeleteBook($owner: String!) {
+  onDeleteBook(owner: $owner) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;

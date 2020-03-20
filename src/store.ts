@@ -9,6 +9,8 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
+import books, { Book } from './reduxSlices/bookSlice';
+import cart, { CartState } from './reduxSlices/cartSlice';
 import {
   combineReducers,
   configureStore,
@@ -20,6 +22,8 @@ import storage from 'redux-persist/lib/storage';
 
 export interface RootState {
   user: UserState;
+  books: Book[];
+  cart: CartState;
 }
 
 const { NODE_ENV } = process.env;
@@ -30,7 +34,11 @@ const persistConfig: PersistConfig<RootState> = {
   whitelist: ['user'],
 };
 
-const rootReducer = combineReducers({ user });
+const rootReducer = combineReducers({
+  user,
+  books,
+  cart,
+});
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

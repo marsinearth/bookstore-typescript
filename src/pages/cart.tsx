@@ -1,9 +1,4 @@
-import {
-  ActionTypes,
-  TAction,
-  TCartProduct,
-  useStateValue,
-} from '../contexts/bookReducer';
+import { Book, bookSelector } from '../reduxSlices/bookSlice';
 import {
   Button,
   Container,
@@ -14,37 +9,56 @@ import {
   Rail,
   Segment,
 } from 'semantic-ui-react';
+import {
+  CartProduct,
+  CartState,
+  remove,
+  reset,
+} from '../reduxSlices/cartSlice';
 import { Link, useHistory } from 'react-router-dom';
-import React, { Dispatch, memo, useCallback } from 'react';
-import bookList, { TBook } from '../assets/data/books';
+import React, { MouseEvent, memo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { Dispatch } from 'redux';
+import { RootState } from '../store';
+import { S3Image } from 'aws-amplify-react';
 import { formatDistance } from 'date-fns';
 import toWon from '../utils/formatCurrency';
 
-type TCartProductProps = TCartProduct & {
-  dispatch: Dispatch<TAction>;
+type CartProductProps = CartProduct & {
+  dispatch: Dispatch;
 };
 
-const CartProduct = memo<TCartProductProps>(
+type OnClickProps = MouseEvent & {
+  removeAll?: boolean;
+};
+
+const CartItem = memo<CartProductProps>(
   ({ isbn, createdAt, number, dispatch }) => {
-    const { img, title, price } =
-      (bookList.find(({ isbn: bid }) => bid === isbn) as TBook) || {};
+    const book = useSelector<RootState, Book | undefined>(state =>
+      bookSelector(state, isbn),
+    );
+    const { img, title, price } = book as Book;
     const onClick = useCallback(
-      ({ removeAll }) => {
-        dispatch({
-          type: ActionTypes.REMOVE,
-          isbn,
-          price,
-          title,
-          removeAll,
-        });
+      ({ removeAll }: OnClickProps) => {
+        if (book) {
+          dispatch(
+            remove({
+              ...book,
+              removeAll,
+            }),
+          );
+        }
       },
-      [dispatch, isbn, price, title],
+      [dispatch, book],
     );
     return (
       <Item>
         <Link to={`/detail/${isbn}`}>
-          <Item.Image size="small" src={img} />
+          <S3Image
+            imgKey={img?.key}
+            theme={{ photoImg: { width: 150, height: 200 } }}
+          />
         </Link>
         <Item.Content style={{ paddingLeft: 20 }}>
           <Item.Extra>{formatDistance(createdAt, new Date())}</Item.Extra>
@@ -65,7 +79,7 @@ const CartProduct = memo<TCartProductProps>(
                 icon="trash alternate"
                 negative
                 labelPosition="right"
-                onClick={() => onClick({ removeAll: true })}
+                onClick={e => onClick({ ...e, removeAll: true })}
               />
             </Button.Group>
           ) : (
@@ -84,7 +98,10 @@ const CartProduct = memo<TCartProductProps>(
 
 export default memo(() => {
   const { goBack } = useHistory();
-  const [{ cartProducts }, dispatch] = useStateValue();
+  const { cartProducts } = useSelector<RootState, CartState>(
+    state => state.cart,
+  );
+  const dispatch = useDispatch();
   return (
     <Segment raised>
       <Grid centered padded>
@@ -107,15 +124,15 @@ export default memo(() => {
                 negative
                 labelPosition="right"
                 onClick={useCallback(() => {
-                  dispatch({ type: ActionTypes.RESET });
+                  dispatch(reset());
                 }, [dispatch])}
               />
             </Button.Group>
           </Rail>
           <Item.Group divided>
             {cartProducts.length ? (
-              cartProducts.map((props: TCartProduct) => (
-                <CartProduct {...props} key={props.isbn} dispatch={dispatch} />
+              cartProducts.map((props: CartProduct) => (
+                <CartItem {...props} key={props.isbn} dispatch={dispatch} />
               ))
             ) : (
               <Container textAlign="center">

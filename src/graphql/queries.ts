@@ -62,3 +62,89 @@ export const listUsers = `query ListUsers(
   }
 }
 `;
+export const syncBooks = `query SyncBooks(
+  $filter: ModelBookFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncBooks(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      isbn
+      title
+      price
+      author
+      publisher
+      release
+      description
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    nextToken
+    startedAt
+  }
+}
+`;
+export const getBook = `query GetBook($isbn: String!) {
+  getBook(isbn: $isbn) {
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    _version
+    _deleted
+    _lastChangedAt
+    owner
+  }
+}
+`;
+export const listBooks = `query ListBooks(
+  $isbn: String
+  $filter: ModelBookFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listBooks(
+    isbn: $isbn
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
+  ) {
+    items {
+      isbn
+      title
+      price
+      author
+      img {
+        key
+      }
+      publisher
+      release
+      description
+      _version
+      _deleted
+      _lastChangedAt
+      owner
+    }
+    nextToken
+    startedAt
+  }
+}
+`;

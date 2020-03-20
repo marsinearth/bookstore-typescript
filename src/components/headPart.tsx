@@ -2,14 +2,18 @@ import { Header, Icon, Label, Segment } from 'semantic-ui-react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
+import { CartState } from '../reduxSlices/cartSlice';
+import { RootState } from '../store';
 import toWon from '../utils/formatCurrency';
-import { useStateValue } from '../contexts/bookReducer';
+import { useSelector } from 'react-redux';
 
 export default memo(() => {
   const { push } = useHistory();
   const { pathname } = useLocation();
   const [isPathCart, setPath] = useState(false);
-  const [{ account, cartProducts }] = useStateValue();
+  const { account, cartProducts } = useSelector<RootState, CartState>(
+    state => state.cart,
+  );
 
   const cartLength = useMemo(() => {
     return cartProducts.reduce((total, { number }) => {

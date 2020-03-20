@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import Amplify from 'aws-amplify';
 import { Hub } from '@aws-amplify/core';
 import Router from './routes';
-import { StateProvider } from './contexts/bookReducer';
 import { authHandler } from './auth';
 import awsConfig from './aws-exports';
 import { useDispatch } from 'react-redux';
@@ -19,9 +18,5 @@ export default () => {
     Hub.listen('auth', evt => authHandler(evt, dispatch));
   }, [dispatch]);
 
-  return (
-    <StateProvider>
-      <AuthenticatedRouter />
-    </StateProvider>
-  );
+  return <AuthenticatedRouter />;
 };

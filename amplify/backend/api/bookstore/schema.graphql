@@ -4,3 +4,20 @@ type User @model @auth(rules: [{ allow: owner }]) {
   name: String!
   account: Int
 }
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type Book @model @auth(rules: [{ allow: owner }]) @key(fields: ["isbn"]) {
+  isbn: String!
+  title: String!
+  price: Int!
+  img: S3Object
+  author: String
+  publisher: String
+  release: String
+  description: String
+}
