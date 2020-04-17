@@ -1,19 +1,22 @@
+import { CartState, fetchCartItems } from '../reduxSlices/cartSlice';
 import { Header, Icon, Label, Segment } from 'semantic-ui-react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { CartState } from '../reduxSlices/cartSlice';
 import { RootState } from '../store';
+import { User } from '../reduxSlices/userSlice';
 import toWon from '../utils/formatCurrency';
-import { useSelector } from 'react-redux';
 
 export default memo(() => {
   const { push } = useHistory();
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
   const [isPathCart, setPath] = useState(false);
-  const { account, cartProducts } = useSelector<RootState, CartState>(
+  const { cartProducts } = useSelector<RootState, CartState>(
     state => state.cart,
   );
+  const { account, name } = useSelector<RootState, User>(state => state.user);
 
   const cartLength = useMemo(() => {
     return cartProducts.reduce((total, { number }) => {
@@ -21,6 +24,10 @@ export default memo(() => {
       return total;
     }, 0);
   }, [cartProducts]);
+
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
   useEffect(() => {
     if (pathname === '/cart') {
@@ -53,7 +60,7 @@ export default memo(() => {
           onClick={navigateToCart}
         >
           <Icon name="user circle" />
-          송조현
+          {name}
           <Label.Detail>
             <Icon name="cart" />
             {!!cartLength && (

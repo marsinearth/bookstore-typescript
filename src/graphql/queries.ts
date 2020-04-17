@@ -1,42 +1,12 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const syncUsers = `query SyncUsers(
-  $filter: ModelUserFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncUsers(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      sub
-      name
-      account
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-    nextToken
-    startedAt
-  }
-}
-`;
 export const getUser = `query GetUser($id: ID!) {
   getUser(id: $id) {
     id
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -52,43 +22,9 @@ export const listUsers = `query ListUsers(
       sub
       name
       account
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
     nextToken
-    startedAt
-  }
-}
-`;
-export const syncBooks = `query SyncBooks(
-  $filter: ModelBookFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncBooks(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      isbn
-      title
-      price
-      author
-      publisher
-      release
-      description
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-    nextToken
-    startedAt
   }
 }
 `;
@@ -106,9 +42,6 @@ export const getBook = `query GetBook($isbn: String!) {
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -131,20 +64,65 @@ export const listBooks = `query ListBooks(
       isbn
       title
       price
-      author
       img {
         key
       }
+      author
       publisher
       release
       description
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
     nextToken
-    startedAt
+  }
+}
+`;
+export const getCartItem = `query GetCartItem($id: ID!) {
+  getCartItem(id: $id) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
+    owner
+  }
+}
+`;
+export const listCartItems = `query ListCartItems(
+  $filter: ModelCartItemFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCartItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      cartOwnerId
+      isbn
+      title
+      price
+      img {
+        key
+      }
+      author
+      publisher
+      release
+      description
+      createdAt
+      number
+      owner
+    }
+    nextToken
   }
 }
 `;

@@ -21,3 +21,18 @@ type Book @model @auth(rules: [{ allow: owner }]) @key(fields: ["isbn"]) {
   release: String
   description: String
 }
+
+type CartItem @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  cartOwnerId: String!
+  isbn: String!
+  title: String!
+  price: Int!
+  img: S3Object
+  author: String
+  publisher: String
+  release: String
+  description: String
+  createdAt: String
+  number: Int!
+}

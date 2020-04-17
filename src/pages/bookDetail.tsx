@@ -14,7 +14,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { RootState } from '../store';
 import { S3Image } from 'aws-amplify-react';
-import { add } from '../reduxSlices/cartSlice';
+import { addItem } from '../reduxSlices/cartSlice';
 import toWon from '../utils/formatCurrency';
 
 type ISBN = Pick<Book, 'isbn'>;
@@ -66,7 +66,7 @@ const BookDetail = memo<ISBN>(({ isbn }) => {
                 icon="cart plus"
                 labelPosition="left"
                 onClick={useCallback(() => {
-                  dispatch(add(book));
+                  dispatch(addItem(book));
                 }, [dispatch, book])}
               />
             </Grid.Column>

@@ -10,9 +10,6 @@ export const createUser = `mutation CreateUser(
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -26,9 +23,6 @@ export const updateUser = `mutation UpdateUser(
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -42,9 +36,6 @@ export const deleteUser = `mutation DeleteUser(
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -66,9 +57,6 @@ export const createBook = `mutation CreateBook(
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -90,9 +78,6 @@ export const updateBook = `mutation UpdateBook(
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -114,9 +99,81 @@ export const deleteBook = `mutation DeleteBook(
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
+    owner
+  }
+}
+`;
+export const createCartItem = `mutation CreateCartItem(
+  $input: CreateCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  createCartItem(input: $input, condition: $condition) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
+    owner
+  }
+}
+`;
+export const updateCartItem = `mutation UpdateCartItem(
+  $input: UpdateCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  updateCartItem(input: $input, condition: $condition) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
+    owner
+  }
+}
+`;
+export const deleteCartItem = `mutation DeleteCartItem(
+  $input: DeleteCartItemInput!
+  $condition: ModelCartItemConditionInput
+) {
+  deleteCartItem(input: $input, condition: $condition) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
     owner
   }
 }

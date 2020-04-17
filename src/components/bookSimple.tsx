@@ -4,7 +4,7 @@ import React, { memo, useCallback } from 'react';
 import { Book } from '../reduxSlices/bookSlice';
 import { Link } from 'react-router-dom';
 import { S3Image } from 'aws-amplify-react';
-import { add } from '../reduxSlices/cartSlice';
+import { addItem } from '../reduxSlices/cartSlice';
 import toWon from '../utils/formatCurrency';
 import { useDispatch } from 'react-redux';
 
@@ -29,7 +29,7 @@ export default memo((book: Book) => {
           icon="cart plus"
           labelPosition="left"
           onClick={useCallback(() => {
-            dispatch(add(book));
+            dispatch(addItem(book));
           }, [dispatch, book])}
         />
       </Card.Content>

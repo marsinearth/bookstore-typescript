@@ -7,9 +7,6 @@ export const onCreateUser = `subscription OnCreateUser($owner: String!) {
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -20,9 +17,6 @@ export const onUpdateUser = `subscription OnUpdateUser($owner: String!) {
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -33,9 +27,6 @@ export const onDeleteUser = `subscription OnDeleteUser($owner: String!) {
     sub
     name
     account
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -54,9 +45,6 @@ export const onCreateBook = `subscription OnCreateBook($owner: String!) {
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -75,9 +63,6 @@ export const onUpdateBook = `subscription OnUpdateBook($owner: String!) {
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
     owner
   }
 }
@@ -96,9 +81,72 @@ export const onDeleteBook = `subscription OnDeleteBook($owner: String!) {
     publisher
     release
     description
-    _version
-    _deleted
-    _lastChangedAt
+    owner
+  }
+}
+`;
+export const onCreateCartItem = `subscription OnCreateCartItem($owner: String!) {
+  onCreateCartItem(owner: $owner) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
+    owner
+  }
+}
+`;
+export const onUpdateCartItem = `subscription OnUpdateCartItem($owner: String!) {
+  onUpdateCartItem(owner: $owner) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
+    owner
+  }
+}
+`;
+export const onDeleteCartItem = `subscription OnDeleteCartItem($owner: String!) {
+  onDeleteCartItem(owner: $owner) {
+    id
+    cartOwnerId
+    isbn
+    title
+    price
+    img {
+      bucket
+      region
+      key
+    }
+    author
+    publisher
+    release
+    description
+    createdAt
+    number
     owner
   }
 }

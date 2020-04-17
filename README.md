@@ -26,8 +26,8 @@ applied with AWS-Amplify, there is demo site.
 
 &#9745; Attach [AWS-Amplify](https://aws-amplify.github.io/docs/js/react) to easily back up the functionalities of backend; do the Sign-in functionality with [Google with the Amplify auth class](https://aws-amplify.github.io/docs/js/authentication#oauth-and-federation-overview).
 
-&#9744; Attach [Amplify API for backend using GraphQL](https://aws-amplify.github.io/docs/js/react#add-graphql-backend) to alter [the hard-coded book data](https://github.com/marsinearth/bookstore-typescript/tree/master/src/assets/data)
+&#9745; Attach [Amplify API for backend using GraphQL](https://aws-amplify.github.io/docs/js/react#add-graphql-backend) to alter [the hard-coded book data](https://github.com/marsinearth/bookstore-typescript/tree/master/src/assets/data)
 
-&#9744; try to manage GraphQL subscription for possible chatting system and product number change in the cart
+~~&#9744; try to manage GraphQL subscription for possible chatting system and product number change in the cart~~
 
-...to be continued
+Completed!

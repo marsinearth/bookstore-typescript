@@ -9,24 +9,18 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
-import books, { Book } from './reduxSlices/bookSlice';
-import cart, { CartState } from './reduxSlices/cartSlice';
 import {
   combineReducers,
   configureStore,
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
-import user, { UserState } from './reduxSlices/userSlice';
 
+import books from './reduxSlices/bookSlice';
+import cart from './reduxSlices/cartSlice';
 import storage from 'redux-persist/lib/storage';
+import user from './reduxSlices/userSlice';
 
-export interface RootState {
-  user: UserState;
-  books: Book[];
-  cart: CartState;
-}
-
-const { NODE_ENV } = process.env;
+export type RootState = ReturnType<typeof rootReducer>;
 
 const persistConfig: PersistConfig<RootState> = {
   key: 'root',
@@ -44,7 +38,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  devTools: NODE_ENV === 'development',
+  devTools: process.env.NODE_ENV === 'development',
   middleware: getDefaultMiddleware({
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

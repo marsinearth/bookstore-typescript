@@ -1,22 +1,58 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export interface UserState {
-  name: string;
+import { UpdateUserMutationVariables } from '../API';
+import { updateUser } from '../graphql/mutations';
+
+export interface User {
+  id: string;
   sub: string;
+  name: string;
   account: number;
 }
 
-type LogInPayload = Pick<UserState, 'name' | 'sub'>;
+export const initialState: User = { id: '', name: '', sub: '', account: 40000 };
+
+export const updateAccount = createAsyncThunk(
+  'user/updateAccount',
+  async ({ id, account }: Pick<User, 'id' | 'account'>) => {
+    try {
+      const updateUserVariables: UpdateUserMutationVariables = {
+        input: {
+          id,
+          account,
+        },
+      };
+      const { data } = (await API.graphql(
+        graphqlOperation(updateUser, updateUserVariables),
+      )) as GraphQLResult<{ updateUser: User }>;
+      if (typeof data?.updateUser.account === 'number') {
+        return data.updateUser.account;
+      }
+    } catch (err) {
+      console.error(`error on cart/updateAccount: ${err}`);
+    }
+  },
+);
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: { name: '', sub: '', account: 40000 } as UserState,
+  initialState,
   reducers: {
-    logIn: (state, action: PayloadAction<LogInPayload>) => {
-      const { name, sub } = action.payload;
+    logIn: (state, action: PayloadAction<User>) => {
+      const { id, name, sub, account } = action.payload;
+      state.id = id;
       state.name = name;
       state.sub = sub;
+      state.account = account;
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(updateAccount.fulfilled, (state, action) => {
+      if (typeof action.payload === 'number') {
+        state.account = action.payload;
+      }
+    });
   },
 });
 
