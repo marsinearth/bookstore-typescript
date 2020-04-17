@@ -1,3 +1,5 @@
+import '@aws-amplify/ui/dist/style.css';
+
 import React, { useEffect } from 'react';
 
 import Amplify from 'aws-amplify';

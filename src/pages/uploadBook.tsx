@@ -1,9 +1,10 @@
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { Controller, useForm } from 'react-hook-form';
+import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api';
+import { Controller, DeepPartial, useForm } from 'react-hook-form';
 import { Form, Grid, Segment } from 'semantic-ui-react';
 import React, { memo, useState } from 'react';
 
 import { Book } from '../reduxSlices/bookSlice';
+import RSwal from '../utils/reactSwal';
 import { S3Image } from 'aws-amplify-react';
 import awsConfig from '../aws-exports';
 import { createBook } from '../graphql/mutations';
@@ -45,7 +46,17 @@ const bookFormList = [
   },
 ];
 
-async function fetchCreateBook(key: string, formValues: Record<string, Book>) {
+const getDefaultFormValues = () =>
+  bookFormList.reduce<Record<string, any>>((acc, curr) => {
+    acc[curr.label] = '';
+    return acc;
+  }, {});
+
+async function fetchCreateBook(
+  key: string,
+  formValues: Record<string, Book>,
+  reset: (values?: DeepPartial<Record<string, any>>) => void,
+) {
   const fileForUpload = {
     bucket,
     key,
@@ -59,20 +70,33 @@ async function fetchCreateBook(key: string, formValues: Record<string, Book>) {
     };
 
     try {
-      await API.graphql(
+      const { data } = (await API.graphql(
         graphqlOperation(createBook, { input: createBookInput }),
-      );
-      console.log('createBook successful!');
+      )) as GraphQLResult<{ createBook: Book }>;
+      if (data?.createBook.isbn) {
+        console.log('createBook successful!', data.createBook);
+        RSwal('success', `${data.createBook.title} 을 추가하였습니다!`).then(
+          () => {
+            reset(getDefaultFormValues());
+          },
+        );
+      }
     } catch (err) {
       console.error('createBook err', err);
     }
   }
 }
 
-function fileToKey(data: File, formValues: Record<string, Book>) {
+function fileToKey(
+  data: File,
+  formValues: Record<string, Book>,
+  reset: (values?: DeepPartial<Record<string, any>>) => void,
+) {
   const { name } = data;
   const key = `${uuidv4()}${name}`;
-  fetchCreateBook(key, formValues);
+  if (formValues && reset) {
+    fetchCreateBook(key, formValues, reset);
+  }
   return key;
 }
 
@@ -82,7 +106,6 @@ const UploadBook = () => {
   const onSubmit = (data: Record<string, Book>) => {
     console.log(data);
     setFormValues(data);
-    reset();
   };
   return (
     <Segment textAlign="center" raised>
@@ -91,7 +114,8 @@ const UploadBook = () => {
           {!!formValues && (
             <S3Image
               picker
-              fileToKey={(file: File) => fileToKey(file, formValues)}
+              theme={{ photo: { textAlign: 'center' } }}
+              fileToKey={(file: File) => fileToKey(file, formValues, reset)}
             />
           )}
           <Form onSubmit={handleSubmit(onSubmit)}>

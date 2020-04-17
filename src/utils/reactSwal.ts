@@ -16,7 +16,7 @@ const customRSwalFire = (
   if (html) {
     swalOptions.html = html;
   }
-  ReactSwal.fire(swalOptions);
+  return ReactSwal.fire(swalOptions);
 };
 
 export default customRSwalFire;
