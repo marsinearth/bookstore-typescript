@@ -5,7 +5,11 @@ import {
   ListCartItemsQueryVariables,
   UpdateCartItemMutationVariables,
 } from '../API';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from '@reduxjs/toolkit';
 import {
   createCartItem,
   deleteCartItem,
@@ -36,10 +40,6 @@ export interface CartState {
   cartProducts: CartProduct[];
 }
 
-const initialState: CartState = {
-  cartProducts: [],
-};
-
 export interface RemoveItemParams extends CartProduct {
   removeAll?: boolean;
 }
@@ -67,6 +67,11 @@ export const fetchCartItems = createAsyncThunk(
     }
   },
 );
+
+const cartItemsAdapter = createEntityAdapter<CartProduct>({
+  selectId: cartItem => cartItem.id,
+  sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
+});
 
 export const addItem = createAsyncThunk(
   'cart/addItem',
@@ -163,7 +168,7 @@ export const removeItem = createAsyncThunk(
           ).then(() => {
             RSwal('info', `${title} 1개가 제거되었습니다.`);
           });
-          return updateData.updateCartItem.id;
+          return updateData.updateCartItem;
         }
       } else {
         // number = 1 | removeAll 일 경우
@@ -179,7 +184,7 @@ export const removeItem = createAsyncThunk(
           ).then(() => {
             RSwal('info', `${title} ${number}개가 제거되었습니다.`);
           });
-          return data.deleteCartItem.id;
+          return data.deleteCartItem;
         }
       }
     } catch (err) {
@@ -220,6 +225,7 @@ export const resetItem = createAsyncThunk(
                 RSwal('success', '카트가 초기화 되었습니다!');
               },
             );
+            return true;
           }
         }
       } else {
@@ -233,49 +239,44 @@ export const resetItem = createAsyncThunk(
 
 const cartSlice = createSlice({
   name: 'cart',
-  initialState,
+  initialState: cartItemsAdapter.getInitialState(),
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchCartItems.fulfilled, (state, action) => {
       if (action.payload) {
-        state.cartProducts = action.payload;
+        cartItemsAdapter.upsertMany(state, action.payload);
       }
     });
     builder.addCase(addItem.fulfilled, (state, action) => {
-      const {
-        arg: { isbn },
-      } = action.meta;
-      const productIndex = state.cartProducts.findIndex(
-        ({ isbn: bIsbn }) => bIsbn === isbn,
-      );
       if (action.payload) {
-        if (productIndex > -1) {
-          state.cartProducts[productIndex].number += 1;
-        } else {
-          state.cartProducts.push(action.payload);
-        }
+        cartItemsAdapter.upsertOne(state, action.payload);
       }
     });
     builder.addCase(removeItem.fulfilled, (state, action) => {
       const {
         arg: { removeAll, number },
       } = action.meta;
-      if (typeof action.payload === 'string') {
+      if (action.payload) {
         // deleteItem일 경우 deleted id을 반환하게끔 짜 놨기 때문에, 리듀서에도 반영
-        const productIndex = state.cartProducts.findIndex(
-          ({ id }) => id === action.payload,
-        );
         if (!removeAll && number > 1) {
-          state.cartProducts[productIndex].number -= 1;
+          cartItemsAdapter.updateOne(state, {
+            id: action.payload.id,
+            changes: action.payload,
+          });
         } else {
-          state.cartProducts.splice(productIndex, 1);
+          cartItemsAdapter.removeOne(state, action.payload.id);
         }
       }
     });
-    builder.addCase(resetItem.fulfilled, () => {
-      return initialState;
+    builder.addCase(resetItem.fulfilled, (state, action) => {
+      if (action.payload) {
+        // FIXME: return 해야만 리덕스 스테이트에 리셋반영이 됨. 에러인듯. 추후에 고쳐질 가능성 농후
+        return cartItemsAdapter.removeAll(state);
+      }
     });
   },
 });
+
+export const cartItemsSelector = cartItemsAdapter.getSelectors();
 
 export default cartSlice.reducer;

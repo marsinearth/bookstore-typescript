@@ -10,13 +10,13 @@ import {
 } from 'semantic-ui-react';
 import {
   CartProduct,
-  CartState,
+  cartItemsSelector,
   removeItem,
   resetItem,
 } from '../reduxSlices/cartSlice';
 import { Link, useHistory } from 'react-router-dom';
 import React, { MouseEvent, memo, useCallback } from 'react';
-import { formatDistance, parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Dispatch } from 'redux';
@@ -57,9 +57,7 @@ const CartItem = memo<CartProductProps>(({ dispatch, item }) => {
         />
       </Link>
       <Item.Content style={{ paddingLeft: 20 }}>
-        <Item.Extra>
-          {formatDistance(parseISO(createdAt), new Date())}
-        </Item.Extra>
+        <Item.Extra>{formatDistanceToNow(parseISO(createdAt))}</Item.Extra>
         <Item.Header>{title}</Item.Header>
         <Item.Meta>{toWon(price)}</Item.Meta>
         <Item.Description>{`${number}개`}</Item.Description>
@@ -96,8 +94,8 @@ const CartItem = memo<CartProductProps>(({ dispatch, item }) => {
 export default memo(() => {
   const { goBack } = useHistory();
   const dispatch = useDispatch();
-  const { cartProducts } = useSelector<RootState, CartState>(
-    state => state.cart,
+  const cartProducts = useSelector<RootState, CartProduct[]>(({ cart }) =>
+    cartItemsSelector.selectAll(cart),
   );
 
   return (

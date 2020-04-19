@@ -1,4 +1,8 @@
-import { CartState, fetchCartItems } from '../reduxSlices/cartSlice';
+import {
+  CartProduct,
+  cartItemsSelector,
+  fetchCartItems,
+} from '../reduxSlices/cartSlice';
 import { Header, Icon, Label, Segment } from 'semantic-ui-react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -13,8 +17,8 @@ export default memo(() => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const [isPathCart, setPath] = useState(false);
-  const { cartProducts } = useSelector<RootState, CartState>(
-    state => state.cart,
+  const cartProducts = useSelector<RootState, CartProduct[]>(({ cart }) =>
+    cartItemsSelector.selectAll(cart),
   );
   const { account, name } = useSelector<RootState, User>(state => state.user);
 

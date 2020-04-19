@@ -1,4 +1,4 @@
-import { Book, bookSelector } from '../reduxSlices/bookSlice';
+import { Book, booksSelectors } from '../reduxSlices/bookSlice';
 import {
   Button,
   Container,
@@ -21,8 +21,8 @@ type ISBN = Pick<Book, 'isbn'>;
 
 const BookDetail = memo<ISBN>(({ isbn }) => {
   const dispatch = useDispatch();
-  const book = useSelector<RootState, Book | undefined>(state =>
-    bookSelector(state, isbn),
+  const book = useSelector<RootState, Book | undefined>(({ books }) =>
+    booksSelectors.selectById(books, isbn),
   );
   if (!book) {
     return null;
